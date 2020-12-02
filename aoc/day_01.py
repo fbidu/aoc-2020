@@ -9,6 +9,7 @@ Day 01
 * All the functions assume that a solution exists.
 * number_list is a list of numerical strings
 """
+import cProfile
 import click
 
 
@@ -20,7 +21,7 @@ def bilinear_search(number_list, target=2020):
     """
     number_list = [int(x) for x in number_list]
 
-    for idx, n in number_list:
+    for idx, n in enumerate(number_list):
         complement = target - n
         for m in number_list[idx:]:
             if m == complement:
@@ -63,6 +64,21 @@ def main(filename):
 
     result = hashed_search(number_list)
     print(result[0] * result[1])
+
+    print("Profiling Hashed Search:")
+    with cProfile.Profile() as pr:
+        hashed_search(number_list)
+    pr.print_stats()
+
+    print("Profiling Linear Search:")
+    with cProfile.Profile() as pr:
+        bilinear_search(number_list)
+    pr.print_stats()
+
+    print("Profiling Bilinear Search:")
+    with cProfile.Profile() as pr:
+        bilinear_search(number_list)
+    pr.print_stats()
 
 
 if __name__ == "__main__":
