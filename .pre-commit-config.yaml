@@ -8,6 +8,7 @@ repos:
         stages: [commit]
       - id: end-of-file-fixer
         stages: [commit]
+        exclude: inputs/
       - id: check-yaml
         stages: [commit]
       - id: check-added-large-files
