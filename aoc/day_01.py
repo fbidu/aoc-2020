@@ -12,7 +12,29 @@ Day 01
 import cProfile
 import click
 
+strategies = []
 
+
+def strategy(func):
+    """
+    A decorator that will register a function in a list of strategies
+    """
+    strategies.append(func)
+    return func
+
+
+def cprofiler(fun, *args, **kwargs):
+    """
+    Profiles a function `fun` through `cProfile`,
+    passing `*args` and `**kwargs` to `fun`
+    """
+    print(f"Profiling {fun.__name__}")
+    with cProfile.Profile() as pr:
+        fun(*args, **kwargs)
+    pr.print_stats()
+
+
+@strategy
 def bilinear_search(number_list, target=2020):
     """
     A simple bilinear search approach to this problem, for each
@@ -27,7 +49,10 @@ def bilinear_search(number_list, target=2020):
             if m == complement:
                 return n, m
 
+    return None, None
 
+
+@strategy
 def linear_search(number_list, target=2020):
     """
     As in the bilinear search, it implements a very simple
@@ -41,7 +66,10 @@ def linear_search(number_list, target=2020):
         if complement in number_list:
             return n, complement
 
+    return None, None
 
+
+@strategy
 def hashed_search(number_list, target=2020):
     """
     In this approach we convert the list of numbers to a set
@@ -54,10 +82,15 @@ def hashed_search(number_list, target=2020):
         if complement in number_list:
             return n, complement
 
+    return None, None
+
 
 @click.command()
 @click.option("--filename", default="input.txt")
 def main(filename):
+    """
+    Handles input and benchmarks all the strategies
+    """
     with open(filename) as f:
         number_list = f.read()
         number_list = number_list[:-1].split("\n")
@@ -65,20 +98,8 @@ def main(filename):
     result = hashed_search(number_list)
     print(result[0] * result[1])
 
-    print("Profiling Hashed Search:")
-    with cProfile.Profile() as pr:
-        hashed_search(number_list)
-    pr.print_stats()
-
-    print("Profiling Linear Search:")
-    with cProfile.Profile() as pr:
-        bilinear_search(number_list)
-    pr.print_stats()
-
-    print("Profiling Bilinear Search:")
-    with cProfile.Profile() as pr:
-        bilinear_search(number_list)
-    pr.print_stats()
+    for fun in strategies:
+        cprofiler(fun, number_list)
 
 
 if __name__ == "__main__":
