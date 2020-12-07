@@ -7,7 +7,6 @@ from aoc import Day
 
 
 class DayX(Day):
-    pass
-    # @strategy
-    # def brute_force(self):
-    #     return "potato"
+    @strategy  # <== brute_force vai ser adicionado à self.strategies
+    def brute_force(self):
+        return "potato"
