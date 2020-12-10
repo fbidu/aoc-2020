@@ -8,8 +8,8 @@
             "name": "Python: Módulo",
             "type": "python",
             "request": "launch",
-            "module": "aoc.day_05_pt2",
-            "args": ["--filename", "inputs/input_05.txt"]
+            "module": "aoc.day_08",
+            "args": ["--filename", "inputs/input_08_test.txt"]
         }
     ]
 }
